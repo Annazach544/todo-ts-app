@@ -25,7 +25,10 @@ addTodo(task: string, priority: number): boolean {
   return true;
 }
 
-  markTodoCompleted(todoIndex: number): void {}
+  markTodoCompleted(todoIndex: number): void {
+  this.todos[todoIndex].completed = true;
+  this.saveToLocalStorage();
+}
 
   getTodos(): Todo[] {
     return this.todos;

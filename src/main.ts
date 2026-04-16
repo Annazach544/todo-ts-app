@@ -19,29 +19,17 @@ app.innerHTML = `
   </div>
 `;
 
-// 👇 skapa AFTER innerHTML (viktigt)
 const todoList = new TodoList();
 
-// 👇 hämta DOM efter render
 const form = document.querySelector('#todo-form') as HTMLFormElement;
 const taskInput = document.querySelector('#task') as HTMLInputElement;
 const priorityInput = document.querySelector('#priority') as HTMLInputElement;
 const message = document.querySelector('#message') as HTMLParagraphElement;
 const list = document.querySelector('#todo-list') as HTMLUListElement;
 
-function renderTodos() {
-  list.innerHTML = "";
+renderTodos();
 
-  todoList.getTodos().forEach((todo) => {
-    const li = document.createElement("li");
-
-    li.textContent = `${todo.task} (prio ${todo.priority})`;
-
-    list.appendChild(li);
-  });
-}
-
-form.addEventListener("submit", (e) => {
+form.addEventListener('submit', (e) => {
   e.preventDefault();
 
   const success = todoList.addTodo(
@@ -50,15 +38,34 @@ form.addEventListener("submit", (e) => {
   );
 
   if (!success) {
-    message.textContent = "Fel input!";
+    message.textContent = 'Fel input';
     return;
   }
 
-  message.textContent = "";
-
-  taskInput.value = "";
-  priorityInput.value = "";
+  message.textContent = '';
+  taskInput.value = '';
+  priorityInput.value = '';
 
   renderTodos();
 });
 
+function renderTodos() {
+  list.innerHTML = '';
+
+  todoList.getTodos().forEach((todo, index) => {
+    const li = document.createElement('li');
+
+    li.innerHTML = `
+      <span style="cursor:pointer; text-decoration: ${todo.completed ? 'line-through' : 'none'}">
+        ${todo.task} (prio: ${todo.priority})
+      </span>
+    `;
+
+    li.addEventListener('click', () => {
+      todoList.markTodoCompleted(index);
+      renderTodos();
+    });
+
+    list.appendChild(li);
+  });
+}
