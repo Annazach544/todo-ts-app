@@ -1,15 +1,19 @@
-import './style.css';
+import './style.scss';
 import { TodoList } from './models/TodoList';
 
 const app = document.querySelector<HTMLDivElement>('#app')!;
 
 app.innerHTML = `
   <div class="container">
-    <h1>Min Todo App</h1>
+    <h1>Todo App</h1>
 
     <form id="todo-form">
       <input type="text" id="task" placeholder="Skriv en uppgift">
-      <input type="number" id="priority" min="1" max="3" placeholder="Prioritet">
+      <select id="priority">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    </select>
       <button type="submit">Lägg till</button>
     </form>
 
@@ -50,24 +54,27 @@ form.addEventListener('submit', (e) => {
 });
 
 function renderTodos() {
-  list.innerHTML = "";
+  list.innerHTML = '';
 
   todoList.getTodos().forEach((todo, index) => {
-    const li = document.createElement("li");
+    const li = document.createElement('li');
+    li.classList.add('todo-item');
 
     li.innerHTML = `
-      <span style="cursor:pointer; text-decoration: ${todo.completed ? "line-through" : "none"}">
+      <span class="todo-text ${todo.completed ? 'done' : ''}">
         ${todo.task} (prio: ${todo.priority})
       </span>
-      <button>Ta bort</button>
+      <div class="todo-actions">
+        <button>Ta bort</button>
+      </div>
     `;
 
-    li.querySelector("span")!.addEventListener("click", () => {
+    li.querySelector('.todo-text')!.addEventListener('click', () => {
       todoList.markTodoCompleted(index);
       renderTodos();
     });
 
-    li.querySelector("button")!.addEventListener("click", (e) => {
+    li.querySelector('button')!.addEventListener('click', (e) => {
       e.stopPropagation();
       todoList.removeTodo(index);
       renderTodos();
