@@ -50,19 +50,26 @@ form.addEventListener('submit', (e) => {
 });
 
 function renderTodos() {
-  list.innerHTML = '';
+  list.innerHTML = "";
 
   todoList.getTodos().forEach((todo, index) => {
-    const li = document.createElement('li');
+    const li = document.createElement("li");
 
     li.innerHTML = `
-      <span style="cursor:pointer; text-decoration: ${todo.completed ? 'line-through' : 'none'}">
+      <span style="cursor:pointer; text-decoration: ${todo.completed ? "line-through" : "none"}">
         ${todo.task} (prio: ${todo.priority})
       </span>
+      <button>Ta bort</button>
     `;
 
-    li.addEventListener('click', () => {
+    li.querySelector("span")!.addEventListener("click", () => {
       todoList.markTodoCompleted(index);
+      renderTodos();
+    });
+
+    li.querySelector("button")!.addEventListener("click", (e) => {
+      e.stopPropagation();
+      todoList.removeTodo(index);
       renderTodos();
     });
 
